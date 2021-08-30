@@ -18,7 +18,7 @@ class Rubric(models.Model):#таблица в БД для рубрик
 
 class SuperRubricManager(models.Manager):#диспетчер рубрик
     def get_queryset(self):
-        return super().get_queryset().filter(super_rubric_isnull=True)
+        return super().get_queryset().filter(super_rubric__isnull=True)
 
 class SuperRubric(Rubric):#надрубрика
     objects = SuperRubricManager()
@@ -34,13 +34,13 @@ class SuperRubric(Rubric):#надрубрика
 
 class SubRubricManager(models.Manager):#диспетчер записей подрубрики
     def qut_queryset(self):
-        return super().get_queryset().filter(super_rubric_isnull=Flase)
+        return super().get_queryset().filter(super_rubric__isnull=False)
 
 class SubRubric(Rubric):#подрубрика
     objects = SubRubricManager()
 
     def __str__(self):
-        return '%s - %s' % (self.super_rubric.name, self.name)
+        return '%s - %s' % (self.super_rubric, self.name)
 
     class Meta:
         proxy = True
