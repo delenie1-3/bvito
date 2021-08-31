@@ -3,6 +3,9 @@ from django.core.signing import Signer
 
 from bvito.settings import ALLOWED_HOSTS
 
+from datetime import datetime
+from os.path import splitext
+
 signer = Signer()
 
 def send_activation_notification(user):#функция рассылки сообщений
@@ -14,3 +17,7 @@ def send_activation_notification(user):#функция рассылки сооб
     subject = render_to_string('email/activation_letter_subject.txt', context)
     body_text = render_to_string('email/activation_letter_body.txt', context)
     user.email_user(subject, body_text)
+
+def get_timestamp_path(instance,filename):
+    return '%s%s' % (datetime.now().timestamp(),split(filename)[1])
+    
