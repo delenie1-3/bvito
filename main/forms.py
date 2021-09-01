@@ -63,3 +63,5 @@ class SubRubricForm(forms.ModelForm):
         model = SubRubric
         fields = '__all__'
 
+class SearchForm(forms.Form):#Форма поиска
+    keyword = forms.CharField(required=False, max_length=20, label='')

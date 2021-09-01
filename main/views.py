@@ -27,6 +27,12 @@ from .utilities import signer
 from django.contrib.auth import logout
 from django.contrib import messages
 
+from django.core.paginator import Paginator
+from django.db.models import Q
+
+from .models import SubRubric, Bv
+from .forms import SearchForm
+
 
 def index(request):#контроллер-функция главной страницы
     return render(request, 'main/index.html')
@@ -112,5 +118,27 @@ class DeleteUserView(LoginRequiredMixin, DeleteView):#контроллер кл�
             queryset = self.get_queryset()
         return get_object_or_404(queryset, pk=self.user_id)
 
-def by_rubric(request,pk):
-    pass
+def by_rubric(request,pk):#список объявлений
+    rubric = get_object_or_404(SubRubric, pk=pk)
+    bbs = Bv.objects.filter(is_active=True, rubric=pk)
+    if 'keyword' in request.GET:
+        keyword = request.GET['keyword']
+        q = Q(title__icontains=keyword) | Q(content__icontains=keyword)
+        bbs = bbs.filter(q)
+    else:
+        keyword = ''
+    form = SearchForm(initial={'keyword':keyword})
+    paginator = Paginator(bbs, 2)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+    page = paginator.get_page(page_num)
+    context = {'rubric':rubric, 'page':page, 'bbs':page.object_list, 'form':form}
+    return render(request, 'main/by_rubric.html', context)
+
+def detail(request, rubric_pk, pk):#контроллер сведений
+    bv = get_object_or_404(Bv, pk=pk)
+    ais = bv.additionalimage_set.all()
+    context = {'bv':bv, 'ais':ais}
+    return render(request, 'main/detail.html', context)
