@@ -35,7 +35,9 @@ from .forms import SearchForm
 
 
 def index(request):#контроллер-функция главной страницы
-    return render(request, 'main/index.html')
+    bbs = Bv.objects.filter(is_active=True)[:10]
+    context = {'bbs':bbs}
+    return render(request, 'main/index.html', context)
 
 def other_page(request, page):
     try:

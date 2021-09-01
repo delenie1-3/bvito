@@ -1,4 +1,33 @@
 {%extends "layout/basic.html"%}
+
+{%load thumbnail%}
+{%load static%}
+{%load bootstrap4%}
+
+{%block title%}Последние 10 объявлений{%endblock%}
+
 {%block content%}
-<h2>Последние 10 объявлений</h2>
+<h2 class="mb-2">Последние 10 объявлений</h2>
+{%if bbs%}
+<ul class="list-unstyled">
+    {%for bv in bbs%}
+    <li class="media my-5 p-3 border">
+        {%url 'main:index_index' rubric_pk=rubric.pk pk=bv.pk as url%}
+        <a href="{{url}}{{all}}">
+            {%if bv.image%}
+            <img class="mr-3" src="{%thumbnail bv.image 'default'%}">
+            {%else%}
+            <img class="mr-3" src="{%static 'main/empty.jpg'%}">
+            {%endif%}
+        </a>
+        <div class="media-body">
+            <h3><a href="{{url}}{{all}}">{{bv.title}}</a></h3>
+            <div>{{bv.content}}</div>
+            <p class="text-right font_weight-bold">{{bv.price}} руб.</p>
+            <p class="text-right font_weight-bold">{{bv.created_at}}</p>
+        </div>
+    </li>
+    {%endfor%}
+</ul>
+{%endif%}
 {%endblock%}
