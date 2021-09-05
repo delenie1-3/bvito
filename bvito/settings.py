@@ -147,4 +147,4 @@ THUMBNAIL_ALIASES = {
     },
 }
 
-THUMBNAIL_BASEDIR = 'thmbnails'
+THUMBNAIL_BASEDIR = 'thumbnails'

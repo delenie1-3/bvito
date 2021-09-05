@@ -143,4 +143,4 @@ def detail(request, rubric_pk, pk):#контроллер сведений
     bv = get_object_or_404(Bv, pk=pk)
     ais = bv.additionalimage_set.all()
     context = {'bv':bv, 'ais':ais}
-    return render(request, 'main/detail.html', context)
+    return render(request, 'main/detail.html', context)   

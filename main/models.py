@@ -11,7 +11,7 @@ class AdvUser(AbstractUser):#своя модель пользователя
     class Meta:
         pass
 
-    def delete(sef, *args, **kwargs):
+    def delete(self, *args, **kwargs):
         for bv in self.bv_set.all():
             bv.delete()
         super().delete(*args, **kwargs)
