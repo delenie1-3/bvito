@@ -1,0 +1,13 @@
+{%extends "layout/basic.html"%}
+{%load bootstrap4%}
+{%block title%}Удаление обявления - Профиль пользователя{%endblock%}
+
+{%block content%}
+<h2>Удаление объявления</h2>
+<form method="post" enctype="multipart/form-data">
+    <h2>Удалить объявление {{bv.title}}?</h2>
+    {%csrf_token%}
+    {%buttons submit='Удалить'%}{%endbuttons%}
+    <a href="{%url 'main:profile'%}">Вернуться</a><!--стилизовать под кнопку-->
+</form>
+{%endblock%}

@@ -28,14 +28,18 @@
             {%endif%}
         </a>
         <div class="media-body">
+            <p>Рубрика: {{bv.rubric}}
             <h3><a href="{{url}}{{all}}">{{bv.title}}</a></h3>
             <div>{{bv.content}}</div>
             <p class="text-right font_weight-bold">{{bv.price}} руб.</p>
             <p class="text-right font_weight-bold">{{bv.created_at}}</p>
+            <p class="text-right mt-2">
+                <a href="{%url 'main:profile_bv_change' pk=bv.pk%}">Исправить</a>
+                <a href="{%url 'main:profile_bv_delete' pk=bv.pk%}">Удалить</a>
+            </p>
         </div>
     </li>
     {%endfor%}
 </ul>
-
 {%endif%}
 {%endblock%}

@@ -175,3 +175,33 @@ def profile_bv_add(request):
         formset = AIFormSet()
     context = {'form':form,'formset':formset}
     return render(request, 'main/profile_bv_add.html', context)
+
+@login_required
+def profile_bv_change(request, pk):
+    bv = get_object_or_404(Bv, pk=pk)
+    if request.method == 'POST':
+        form = BvForm(request.POST, request.FILES, instance=bv)
+        if form.is_valid():
+            bv = form.save()
+            formset = AIFormSet(request.POST, request.FILES, instance=bv)
+            if formset.is_valid():
+                formset.save()
+                messages.add_message(request, messages.SUCCESS, 'Объявление исправлено')
+                return redirect('main:profile')
+    else:
+        form = BvForm(instance=bv)
+        formset = AIFormSet(instance=bv)
+    context = {'form':form, 'formset':formset}
+    return render(request, 'main/profile_bv_change.html', context)
+
+@login_required
+def profile_bv_delete(request, pk):
+    bv = get_object_or_404(Bv, pk=pk)
+    if request.method == 'POST':
+        bv.delete()
+        messages.add_message(request, messages.SUCCESS, 'Объявление удалено')
+        return redirect('main:profile')
+    else:
+        context = {'bv':bv}
+        return render(request, 'main/profile_bv_delete.html', context)
+        
