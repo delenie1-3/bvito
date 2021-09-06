@@ -8,6 +8,9 @@ from django.core.exceptions import ValidationError
 
 from .apps import user_registered
 
+from django.forms import inlineformset_factory
+from .models import Bv, AdditionalImage
+
 class ChangeUserInfoForm(forms.ModelForm):#форма для ввода основных данных
     email = forms.EmailField(required=True, label='Адрес электронной почты')
 
@@ -65,3 +68,11 @@ class SubRubricForm(forms.ModelForm):
 
 class SearchForm(forms.Form):#Форма поиска
     keyword = forms.CharField(required=False, max_length=20, label='')
+
+class BvForm(forms.ModelForm):
+    class Meta:
+        model = Bv
+        fields = '__all__'
+        widgets = {'author':forms.HiddenInput}
+
+AIFormSet = inlineformset_factory(Bv, AdditionalImage, fields='__all__')

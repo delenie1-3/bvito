@@ -31,7 +31,8 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 
 from .models import SubRubric, Bv
-from .forms import SearchForm
+from .forms import SearchForm, BvForm, AIFormSet
+from django.shortcuts import redirect
 
 
 def index(request):#контроллер-функция главной страницы
@@ -144,3 +145,33 @@ def detail(request, rubric_pk, pk):#контроллер сведений
     ais = bv.additionalimage_set.all()
     context = {'bv':bv, 'ais':ais}
     return render(request, 'main/detail.html', context)   
+
+@login_required
+def profile(request):
+    bbs = Bv.objects.filter(author=request.user.pk)
+    context = {'bbs':bbs}
+    return render(request, 'main/profile.html', context)
+
+@login_required
+def profile_bv_detail(request, pk):#контроллер сведений конкретного пользователя
+    bv = get_object_or_404(Bv, pk=pk)
+    ais = bv.additionalimage_set.all()
+    context = {'bv':bv, 'ais':ais}
+    return render(request, 'main/profile_bv_detail.html', context) 
+
+@login_required
+def profile_bv_add(request):
+    if request.method == 'POST':
+        form = BvForm(request.POST, request.FILES)
+        if form.is_valid():
+            bv = form.save()
+            formset = AIFormSet(request.POST, request.FILES, instance=bv)
+            if formset.is_valid():
+                formset.save()
+                messages.add_message(request, messages.SUCCESS, 'Объявление добавлено')
+                return redirect('main:profile')
+    else:
+        form = BvForm(initial={'author':request.user.pk})
+        formset = AIFormSet()
+    context = {'form':form,'formset':formset}
+    return render(request, 'main/profile_bv_add.html', context)
