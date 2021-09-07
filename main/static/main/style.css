@@ -10,3 +10,15 @@ img.main-image{
 img.additional-image{
     width:180px;
 }
+.btn {
+    display: inline-block; /* Строчно-блочный элемент */
+    background: #8C959D; /* Серый цвет фона */
+    color: rgb(28, 55, 175); /* Белый цвет текста */
+    padding: 1rem 1.5rem; /* Поля вокруг текста */
+    text-decoration: none; /* Убираем подчёркивание */
+    border-radius: 3px; /* Скругляем уголки */
+   }
+/*.btn:hover{
+	background: #f4f4f4;
+	color: grey;
+}*/

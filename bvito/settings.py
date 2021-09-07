@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'bvito',
     'django_cleanup',
     'easy_thumbnails',
+    'captcha',
 ]
 
 MIDDLEWARE = [

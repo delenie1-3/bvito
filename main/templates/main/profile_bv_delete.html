@@ -8,6 +8,11 @@
     <h2>Удалить объявление {{bv.title}}?</h2>
     {%csrf_token%}
     {%buttons submit='Удалить'%}{%endbuttons%}
-    <a href="{%url 'main:profile'%}">Вернуться</a><!--стилизовать под кнопку-->
+    <a style="display: inline-block; /* Строчно-блочный элемент */
+    background: #8C959D; /* Серый цвет фона */
+    color: rgb(28, 55, 175); /* Белый цвет текста */
+    padding: 1rem 1.5rem; /* Поля вокруг текста */
+    text-decoration: none; /* Убираем подчёркивание */
+    border-radius: 3px;" href="{%url 'main:profile'%}">Вернуться</a><!--стилизовать под кнопку-->
 </form>
 {%endblock%}

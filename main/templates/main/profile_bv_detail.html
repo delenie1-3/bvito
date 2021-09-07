@@ -26,4 +26,15 @@
 </div>
 {%endif%}
 <p><a href="{%url 'main:by_rubric' pk=bv.rubric.pk%}{{all}}">Назад</a></p>
+{%if comments%}
+<div class="mt-5">
+    {%for comment in comments%}
+    <div class="my-2 p-2 border">
+        <h5>{{comment.author}}</h5>
+        <p>{{comment.content}}</p>
+        <p class="text-right font-italic">{{comment.created_at}}</p>
+    </div>
+    {%endfor%}
+</div>
+{%endif%}
 {%endblock%}

@@ -34,6 +34,9 @@ from .models import SubRubric, Bv
 from .forms import SearchForm, BvForm, AIFormSet
 from django.shortcuts import redirect
 
+from .models import Comment
+from .forms import UserCommentForm, GuestCommentForm
+
 
 def index(request):#контроллер-функция главной страницы
     bbs = Bv.objects.filter(is_active=True)[:10]
@@ -141,10 +144,31 @@ def by_rubric(request,pk):#список объявлений
     return render(request, 'main/by_rubric.html', context)
 
 def detail(request, rubric_pk, pk):#контроллер сведений
-    bv = get_object_or_404(Bv, pk=pk)
+    bv = Bv.objects.get(pk=pk)
+    ais = bv.additionalimage_set.all()
+    comments = Comment.objects.filter(bv=pk, is_active=True)
+    initial = {'bv':bv.pk}
+    if request.user.is_authenticated:
+        initial['author'] = request.user.username
+        form_class = UserCommentForm
+    else:
+        form_class = GuestCommentForm
+    form = form_class(initial=initial)
+    if request.method == 'POST':
+        c_form = form_class(request.POST)
+        if c_form.is_valid():
+            c_form.save()
+            messages.add_message(request, messages.SUCCESS, 'Комментарий добавлен')
+        else:
+            form = c_form
+            messages.add_message(request, messages.WARNING, 'Комментарий не добавлен')
+    context = {'bv':bv, 'ais':ais, 'comments':comments, 'form':form}
+    return render(request, 'main/detail.html', context)
+    #детали объявления без капчи
+    '''bv = get_object_or_404(Bv, pk=pk)
     ais = bv.additionalimage_set.all()
     context = {'bv':bv, 'ais':ais}
-    return render(request, 'main/detail.html', context)   
+    return render(request, 'main/detail.html', context)'''   
 
 @login_required
 def profile(request):
@@ -154,9 +178,25 @@ def profile(request):
 
 @login_required
 def profile_bv_detail(request, pk):#контроллер сведений конкретного пользователя
-    bv = get_object_or_404(Bv, pk=pk)
+    bv = Bv.objects.get(pk=pk)
     ais = bv.additionalimage_set.all()
-    context = {'bv':bv, 'ais':ais}
+    comments = Comment.objects.filter(bv=pk, is_active=True)
+    initial = {'bv':bv.pk}
+    if request.user.is_authenticated:
+        initial['author'] = request.user.username
+        form_class = UserCommentForm
+    else:
+        form_class = GuestCommentForm
+    form = form_class(initial=initial)
+    if request.method == 'POST':
+        c_form = form_class(request.POST)
+        if c_form.is_valid():
+            c_form.save()
+            messages.add_message(request, messages.SUCCESS, 'Комментарий добавлен')
+        else:
+            form = c_form
+            messages.add_message(request, messages.WARNING, 'Комментарий не добавлен')
+    context = {'bv':bv, 'ais':ais, 'comments':comments, 'form':form}
     return render(request, 'main/profile_bv_detail.html', context) 
 
 @login_required
