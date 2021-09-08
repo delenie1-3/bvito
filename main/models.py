@@ -4,6 +4,9 @@ from django.contrib.auth.models import AbstractUser
 
 from .utilities import get_timestamp_path
 
+from django.db.models.signals import post_save
+from .utilities import send_new_comment_notification
+
 class AdvUser(AbstractUser):#своя модель пользователя
     is_activated = models.BooleanField(default=True, db_index=True, verbose_name='Прошёл активацию')
     send_messages = models.BooleanField(default=True, verbose_name='Слать оповещение о новых комментариях')
@@ -98,3 +101,10 @@ class Comment(models.Model):#хранение комментов
         verbose_name_plural = 'Комментарии'
         verbose_name = 'Комментарий'
         ordering = ['created_at']
+
+def post_save_dispatcher(sender, **kwargs):#вызов отправки сообщения
+    author = kwargs['instance'].bv.author
+    if kwargs['created'] and author.send_messages:
+        send_new_comment_notification(kwargs['instance'])
+
+post_save.connect(post_save_dispatcher, sender=Comment)
